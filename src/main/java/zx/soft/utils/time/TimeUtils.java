@@ -22,6 +22,8 @@ public class TimeUtils {
 
 	private static Logger logger = LoggerFactory.getLogger(TimeUtils.class);
 
+	private static final ThreadLocal<DateFormat> SOLR_FORMATS = new ThreadLocal<>();
+
 	private static final DateFormat SINA_API_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
 
 	private static final DateFormat SOLR_RETURN_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
@@ -43,16 +45,25 @@ public class TimeUtils {
 		System.out.println(timeStrByHour(System.currentTimeMillis()));
 	}
 
+	private static DateFormat getSolrFormat() {
+		DateFormat format = SOLR_FORMATS.get();
+		if (format == null) {
+			format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+			SOLR_FORMATS.set(format);
+		}
+		return format;
+	}
+
 	/**
 	 * 将时间戳转换成Solr标准的Date格式，注意：该转换快8小时
 	 * 如：2014-04-10T10:07:14Z
 	 */
 	public static String transToSolrDateStr(long timestamp) {
-		return SOLR_FORMAT.format(new Date(timestamp));
+		return getSolrFormat().format(new Date(timestamp));
 	}
 
 	public static long tranSolrDateStrToMilli(String str) throws ParseException {
-		return SOLR_FORMAT.parse(str).getTime();
+		return getSolrFormat().parse(str).getTime();
 	}
 
 	/**
@@ -81,6 +92,16 @@ public class TimeUtils {
 		} catch (ParseException e) {
 			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
 			return "";
+			//			throw new RuntimeException();
+		}
+	}
+
+	public static long transSolrReturnStrToMilli(String str) {
+		try {
+			return SOLR_RETURN_FORMAT.parse(str).getTime();
+		} catch (ParseException e) {
+			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			return 0L;
 			//			throw new RuntimeException();
 		}
 	}
