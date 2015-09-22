@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,48 +21,16 @@ public class TimeUtils {
 
 	private static Logger logger = LoggerFactory.getLogger(TimeUtils.class);
 
-	private static final ThreadLocal<DateFormat> SOLR_FORMATS = new ThreadLocal<>();
-
-	private static final DateFormat SINA_API_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
-
-	private static final DateFormat SOLR_RETURN_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
-
-	private static final DateFormat SOLR_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-
-	private static final DateFormat LONG_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-	private static final DateFormat TWITTER_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-
-	private static final SimpleDateFormat DATE_HOUR = new SimpleDateFormat("yyyy-MM-dd,HH");
-
-	public static void main(String[] args) {
-		System.out.println(TimeUtils.transStrToCommonDateStr("Thu Apr 10 11:40:56 CST 2014"));
-		System.out.println(TimeUtils.transStrToCommonDateStr("Thu Apr 10 11:40:56 CST 2014", 8));
-		System.out.println(TimeUtils.transToSolrDateStr(getMidnight(System.currentTimeMillis(), -31)));
-		System.out.println(TimeUtils.transToSolrDateStr(transCurrentTime(System.currentTimeMillis(), 0, 0, -31, 0)));
-		System.out.println(convertMilliToStr(1 * 3600 * 1000 + 30 * 60 * 1000 + 10000));
-		System.out.println(timeStrByHour(System.currentTimeMillis()));
-	}
-
-	private static DateFormat getSolrFormat() {
-		DateFormat format = SOLR_FORMATS.get();
-		if (format == null) {
-			format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-			SOLR_FORMATS.set(format);
-		}
-		return format;
-	}
-
 	/**
 	 * 将时间戳转换成Solr标准的Date格式，注意：该转换快8小时
 	 * 如：2014-04-10T10:07:14Z
 	 */
 	public static String transToSolrDateStr(long timestamp) {
-		return getSolrFormat().format(new Date(timestamp));
+		return DateFormatterThreadLocal.getSolrDateFormat().format(new Date(timestamp));
 	}
 
 	public static long tranSolrDateStrToMilli(String str) throws ParseException {
-		return getSolrFormat().parse(str).getTime();
+		return DateFormatterThreadLocal.getSolrDateFormat().parse(str).getTime();
 	}
 
 	/**
@@ -79,7 +46,7 @@ public class TimeUtils {
 	 * 如：2014-04-10 10:07:14
 	 */
 	public static String transToCommonDateStr(long timestamp) {
-		return LONG_FORMAT.format(new Date(timestamp));
+		return DateFormatterThreadLocal.getLongDateFormat().format(new Date(timestamp));
 	}
 
 	/**
@@ -88,7 +55,8 @@ public class TimeUtils {
 	 */
 	public static String transStrToCommonDateStr(String str) {
 		try {
-			return LONG_FORMAT.format(SOLR_RETURN_FORMAT.parse(str));
+			return DateFormatterThreadLocal.getLongDateFormat().format(
+					DateFormatterThreadLocal.getSolrReturnDateFormat().parse(str));
 		} catch (ParseException e) {
 			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
 			return "";
@@ -98,7 +66,7 @@ public class TimeUtils {
 
 	public static long transSolrReturnStrToMilli(String str) {
 		try {
-			return SOLR_RETURN_FORMAT.parse(str).getTime();
+			return DateFormatterThreadLocal.getSolrReturnDateFormat().parse(str).getTime();
 		} catch (ParseException e) {
 			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
 			return 0L;
@@ -111,7 +79,8 @@ public class TimeUtils {
 	 */
 	public static String transStrToCommonDateStr(String str, int hours) {
 		try {
-			return LONG_FORMAT.format(SOLR_RETURN_FORMAT.parse(str).getTime() - hours * 3600 * 1000);
+			return DateFormatterThreadLocal.getLongDateFormat().format(
+					DateFormatterThreadLocal.getSolrReturnDateFormat().parse(str).getTime() - hours * 3600 * 1000);
 		} catch (Exception e) {
 			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
 			return "";
@@ -140,7 +109,7 @@ public class TimeUtils {
 	 */
 	public static long transTimeLong(String str) {
 		try {
-			Date date = LONG_FORMAT.parse(str);
+			Date date = DateFormatterThreadLocal.getLongDateFormat().parse(str);
 			return date.getTime();
 		} catch (ParseException e) {
 			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
@@ -155,7 +124,7 @@ public class TimeUtils {
 	 */
 	public static long transTwitterTimeLong(String str) {
 		try {
-			Date date = TWITTER_FORMAT.parse(str);
+			Date date = DateFormatterThreadLocal.getTwitterDateFormat().parse(str);
 			return date.getTime();
 		} catch (ParseException e) {
 			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
@@ -224,7 +193,7 @@ public class TimeUtils {
 
 	public static Date tranSinaApiDate(String timeStr) {
 		try {
-			return SINA_API_FORMAT.parse(timeStr);
+			return DateFormatterThreadLocal.getSinaApiDateFormat().parse(timeStr);
 		} catch (ParseException e) {
 			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
 			throw new RuntimeException(e);
@@ -235,6 +204,11 @@ public class TimeUtils {
 	 * 将当前的时间戳转换成小时精度，如："2014-09-05,14"
 	 */
 	public static String timeStrByHour(long milliSecond) {
-		return DATE_HOUR.format(new Date(milliSecond));
+		return DateFormatterThreadLocal.getDateHourDateFormat().format(new Date(milliSecond));
 	}
+
+	public static DateFormat getDateFormat(String pattern) {
+		return new SimpleDateFormat(pattern, DateFormatPattern.DEFAULT_LOCALE);
+	}
+
 }
