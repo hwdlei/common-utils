@@ -15,4 +15,9 @@ public class StringPool extends ObjectFactory<String> {
 	protected String create() {
 		return "" + (i++);
 	}
+
+	@Override
+	public boolean isValid(String t) {
+		return true;
+	}
 }

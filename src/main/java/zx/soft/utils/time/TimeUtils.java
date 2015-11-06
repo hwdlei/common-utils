@@ -156,7 +156,7 @@ public class TimeUtils {
 	}
 
 	/**
-	 * 获得获得距离当前时间intervalDay的时间
+	 * 获得距离当前时间intervalDay的时间
 	 * @author donglei
 	 * @param gapDay
 	 * @return

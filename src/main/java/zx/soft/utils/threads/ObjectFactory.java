@@ -1,6 +1,7 @@
 package zx.soft.utils.threads;
 
 import java.util.HashSet;
+import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,14 @@ public abstract class ObjectFactory<T> {
 		boolean isGet = false;
 		int numTry = 0;
 		while (!isGet && numTry <= TRY) {
+			// remove invalid Object instance
+			Iterator<T> ite = available.iterator();
+			while (ite.hasNext()) {
+				T t = ite.next();
+				if (!isValid(t)) {
+					ite.remove();
+				}
+			}
 			if (available.size() > 0) {
 				isGet = true;
 				logger.info("Get an instance from the pool");
@@ -69,6 +78,8 @@ public abstract class ObjectFactory<T> {
 		available.add(instance);
 		notifyAll();
 	}
+
+	public abstract boolean isValid(T t);
 
 	@Override
 	public String toString() {
