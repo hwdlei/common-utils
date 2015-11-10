@@ -39,9 +39,8 @@
 
 ### 开发人员
 
-WeChat: wgybzb
+WeChat: dongkelun
 
 QQ: 1010437118
 
-E-mail: wgybzb@sina.cn
 
