@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,6 +29,20 @@ public class ObjectFactoryTest {
 		pool.checkIn(oliphaunt2);
 		String oliphaunt6 = pool.checkOut();
 		Assert.assertTrue(oliphaunt2 == oliphaunt6);
+	}
+
+	@Test
+	public void testExpiration() throws InterruptedException {
+		StringPool pool = new StringPool(3, 2, 500);
+		String oliphaunt1 = pool.checkOut();
+		pool.checkIn(oliphaunt1);
+		String oliphaunt2 = pool.checkOut();
+		System.out.println(oliphaunt1 + oliphaunt2);
+		Assert.assertTrue(oliphaunt1 == oliphaunt2);
+		TimeUnit.MILLISECONDS.sleep(1000);
+		String oliphaunt3 = pool.checkOut();
+		Assert.assertTrue(oliphaunt2 != oliphaunt3);
+		System.out.println(oliphaunt2 + oliphaunt3);
 	}
 
 	@Test

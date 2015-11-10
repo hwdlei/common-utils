@@ -11,13 +11,22 @@ public class StringPool extends ObjectFactory<String> {
 		super(num, tryNum);
 	}
 
+	public StringPool(int num, int tryNum, long expira) {
+		super(num, tryNum, expira);
+	}
+
 	@Override
 	protected String create() {
 		return "" + (i++);
 	}
 
 	@Override
-	public boolean isValid(String t) {
+	public boolean validate(String o) {
 		return true;
 	}
+
+	@Override
+	public void expire(String o) {
+	}
+
 }
