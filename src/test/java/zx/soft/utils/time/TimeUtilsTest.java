@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.junit.Test;
@@ -59,6 +60,8 @@ public class TimeUtilsTest {
 
 	@Test
 	public void testGetMidnight() {
+		Calendar cal = Calendar.getInstance();
+		System.out.println(cal.get(Calendar.WEEK_OF_MONTH));
 		long midight = TimeUtils.getMidnight(1430495417083L, -1);
 		assertEquals("2015-04-30T00:00:00Z", TimeUtils.transToSolrDateStr(midight));
 	}

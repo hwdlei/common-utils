@@ -14,23 +14,14 @@
 	<description>Common Utils for Development.</description>
 
 	<dependencies>
-		<!-- 系统信息Gather和Report包 -->
+		<!-- Restlet组件 -->
 		<dependency>
-			<groupId>fr.inria.powerapi.sensor</groupId>
-			<artifactId>sensor-cpu-sigar</artifactId>
-			<version>1.5</version>
+			<groupId>org.restlet.jse</groupId>
+			<artifactId>org.restlet</artifactId>
 		</dependency>
-		<!-- Java Native Runtime - POSIX -->
 		<dependency>
-			<groupId>com.github.jnr</groupId>
-			<artifactId>jnr-posix</artifactId>
-			<version>3.0.17</version>
-		</dependency>
-		<!-- Java Native Access Platform -->
-		<dependency>
-			<groupId>net.java.dev.jna</groupId>
-			<artifactId>jna-platform</artifactId>
-			<version>4.1.0</version>
+			<groupId>org.restlet.jse</groupId>
+			<artifactId>org.restlet.ext.jackson</artifactId>
 		</dependency>
 		<!-- Json包 -->
 		<dependency>

@@ -2,8 +2,6 @@ package zx.soft.utils.threads;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -74,11 +72,6 @@ public class ApplyThreadPool {
 		});
 
 		return result;
-	}
-
-	public static void stop(int threadsNum) {
-		ExecutorService exec = Executors.newFixedThreadPool(threadsNum);
-		exec.shutdown();
 	}
 
 }
