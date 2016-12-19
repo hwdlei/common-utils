@@ -12,14 +12,14 @@ import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import zx.soft.utils.log.LogbackUtil;
-
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+
+import zx.soft.utils.log.ExceptionHelper;
 
 /**
  * JSON工具类
@@ -48,7 +48,7 @@ public class JsonUtils {
 		try {
 			return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
 		} catch (IOException e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 			throw new RuntimeException(e);
 		}
 	}
@@ -57,7 +57,7 @@ public class JsonUtils {
 		try {
 			return mapper.writeValueAsString(object);
 		} catch (IOException e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 			throw new RuntimeException(e);
 		}
 	}
@@ -101,7 +101,7 @@ public class JsonUtils {
 	 * @return
 	 */
 	public static <T> List<T> parseJsonArray(String json, Class<T> cls) {
-		List<T> ts = new LinkedList<T>();
+		List<T> ts = new LinkedList<>();
 
 		JsonFactory factory = new JsonFactory();
 		JsonParser jp = null;
@@ -113,7 +113,7 @@ public class JsonUtils {
 				ts.add(t);
 			}
 		} catch (IOException e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 		}
 
 		return ts;

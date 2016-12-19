@@ -9,7 +9,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import zx.soft.utils.log.LogbackUtil;
+import zx.soft.utils.log.ExceptionHelper;
 
 /**
  * 时间工具类
@@ -58,7 +58,7 @@ public class TimeUtils {
 			return DateFormatterThreadLocal.getLongDateFormat().format(
 					DateFormatterThreadLocal.getSolrReturnDateFormat().parse(str));
 		} catch (ParseException e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 			return "";
 			//			throw new RuntimeException();
 		}
@@ -68,7 +68,7 @@ public class TimeUtils {
 		try {
 			return DateFormatterThreadLocal.getSolrReturnDateFormat().parse(str).getTime();
 		} catch (ParseException e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 			return 0L;
 			//			throw new RuntimeException();
 		}
@@ -82,7 +82,7 @@ public class TimeUtils {
 			return DateFormatterThreadLocal.getLongDateFormat().format(
 					DateFormatterThreadLocal.getSolrReturnDateFormat().parse(str).getTime() - hours * 3600 * 1000);
 		} catch (Exception e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 			return "";
 			//			throw new RuntimeException();
 		}
@@ -112,7 +112,7 @@ public class TimeUtils {
 			Date date = DateFormatterThreadLocal.getLongDateFormat().parse(str);
 			return date.getTime();
 		} catch (ParseException e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 			throw new RuntimeException(e);
 		}
 	}
@@ -127,7 +127,7 @@ public class TimeUtils {
 			Date date = DateFormatterThreadLocal.getTwitterDateFormat().parse(str);
 			return date.getTime();
 		} catch (ParseException e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 			throw new RuntimeException(e);
 		}
 	}
@@ -195,7 +195,7 @@ public class TimeUtils {
 		try {
 			return DateFormatterThreadLocal.getSinaApiDateFormat().parse(timeStr);
 		} catch (ParseException e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 			throw new RuntimeException(e);
 		}
 	}

@@ -27,7 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import zx.soft.utils.log.LogbackUtil;
+import zx.soft.utils.log.ExceptionHelper;
 
 /**
  * HTTP工具类
@@ -92,10 +92,10 @@ public class HttpClientDaoImpl implements ClientDao {
 			}
 			return sb.toString();
 		} catch (URIException e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 			throw new RuntimeException(e);
 		} catch (IOException e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 			throw new RuntimeException(e);
 		} finally {
 			method.releaseConnection();
@@ -150,9 +150,9 @@ public class HttpClientDaoImpl implements ClientDao {
 				reader.close();
 			}
 		} catch (URIException e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 		} catch (IOException e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 		} finally {
 			method.releaseConnection();
 			//			client.getHttpConnectionManager().closeIdleConnections(1000);
@@ -173,7 +173,7 @@ public class HttpClientDaoImpl implements ClientDao {
 		try {
 			requestEntity = new StringRequestEntity(data, null, charset);
 		} catch (UnsupportedEncodingException e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 			return "error";
 		}
 		httpMethod.setRequestEntity(requestEntity);
@@ -196,7 +196,7 @@ public class HttpClientDaoImpl implements ClientDao {
 		try {
 			client.executeMethod(httpMethod);
 		} catch (IOException e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 			return "error";
 		}
 		int responseCode = httpMethod.getStatusCode();
@@ -221,7 +221,7 @@ public class HttpClientDaoImpl implements ClientDao {
 		try {
 			requestEntity = new StringRequestEntity(data, null, charset);
 		} catch (UnsupportedEncodingException e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 			return "error";
 		}
 		httpMethod.setRequestEntity(requestEntity);
@@ -249,7 +249,7 @@ public class HttpClientDaoImpl implements ClientDao {
 			}
 			return httpMethod.getResponseBodyAsString();
 		} catch (IOException e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 		} finally {
 			httpMethod.releaseConnection();
 		}
@@ -265,7 +265,7 @@ public class HttpClientDaoImpl implements ClientDao {
 		try {
 			requestEntity = new StringRequestEntity(data, null, charset);
 		} catch (UnsupportedEncodingException e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 			return null;
 		}
 		httpMethod.setRequestEntity(requestEntity);
@@ -288,7 +288,7 @@ public class HttpClientDaoImpl implements ClientDao {
 		try {
 			client.executeMethod(httpMethod);
 		} catch (IOException e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 			return null;
 		}
 		int responseCode = httpMethod.getStatusCode();

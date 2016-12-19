@@ -6,11 +6,11 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import zx.soft.utils.log.LogbackUtil;
+import zx.soft.utils.log.ExceptionHelper;
 
 /**
  * 配置文件读取类
- * 
+ *
  * @author wanggang
  *
  */
@@ -25,7 +25,7 @@ public class ConfigUtil {
 			result.load(in);
 			return result;
 		} catch (Exception e) {
-			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			logger.error("Exception:{}", ExceptionHelper.stackTrace(e));
 			throw new RuntimeException(e);
 		}
 	}
